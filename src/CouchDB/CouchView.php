@@ -47,12 +47,12 @@ class CouchView
     }
 
     public function reduce($reduce = true) {
-        $this->params['reduce'] = $reduce;
+        $this->params['reduce'] = ($reduce) ? 'true' : 'false';
         return $this;
     }
 
     public function group($group = true) {
-        $this->params['group'] = $group;
+        $this->params['group'] = ($group) ? 'true' : 'false';
         return $this;
     }
 
