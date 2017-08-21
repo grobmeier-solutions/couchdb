@@ -27,6 +27,7 @@ class CouchView
     private $params = [];
 
     public function __construct(Client $client, $documentUrl, $viewName) {
+        $this->client = $client;
         $this->url = sprintf($documentUrl. "/_view/%s", $viewName);
     }
 
