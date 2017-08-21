@@ -36,6 +36,11 @@ class CouchView
         return $this;
     }
 
+    public function includeDocs($include = true) {
+        $this->params['include_docs'] = ($include) ? 'true' : 'false';
+        return $this;
+    }
+
     public function limit($limit) {
         $this->params['limit'] = $limit;
         return $this;
