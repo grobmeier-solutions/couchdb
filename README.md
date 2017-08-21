@@ -1,2 +1,5 @@
 # couchdb
-Simple CouchDB client without dependencies
+
+Simple CouchDB client.
+
+Docs + contribution guides following
