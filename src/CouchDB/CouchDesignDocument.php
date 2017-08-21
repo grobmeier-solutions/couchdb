@@ -17,7 +17,6 @@
 namespace GrobmeierSolutions\CouchDB;
 
 use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
 
 class CouchDesignDocument
 {
@@ -25,6 +24,8 @@ class CouchDesignDocument
     private $name;
 
     private $database;
+
+    private $url;
 
     /**
      * CouchDatabase constructor.
@@ -37,107 +38,26 @@ class CouchDesignDocument
         $this->client = $client;
         $this->database = $database;
         $this->name = $name;
+
+        $this->url = sprintf("%s/_design/%s", $this->database->getName(), $this->name);
+    }
+
+    public function getUrl() {
+        return $this->url;
     }
 
     public function exist()
     {
-        $url = sprintf("%s/_design/%s", $this->database->getName(), $this->name);
-        return $this->client->head($url, ['exceptions' => false])->getStatusCode() == 200;
+        return $this->client->head($this->url, ['exceptions' => false])->getStatusCode() == 200;
     }
 
     public function get()
     {
-        $url = sprintf("%s/_design/%s", $this->database->getName(), $this->name);
-        return $this->client->get($url)->getBody()->getContents();
+        return $this->client->get($this->url)->getBody()->getContents();
     }
 
-    public function aggregateView($name, $keys = null)
-    {
-        return $this->view($name, $keys, null, null, true, true);
+    public function view($viewName) {
+        return new CouchView($this->client, $this->url, $viewName);
     }
 
-    public function aggregateRangeView($name, $startKeys = null, $endKeys = null)
-    {
-        return $this->rangeView($name, $startKeys, $endKeys, null, null, true, true);
-    }
-
-    /**
-     * @param $name string the name of the view
-     * @param null|array|string|int $key the keys
-     * @param null|int $limit the max limit of the results
-     * @param null|int $skip skip $x results
-     * @param bool $reduce
-     * @param bool $group
-     * @return string
-     */
-    public function view($name, $key = null, $limit = null, $skip = null, $reduce = false, $group = false)
-    {
-        $params = [];
-
-        if ($key != null) {
-            $params['keys'] = 'key=' . json_encode($key);
-        }
-
-        if ($limit != null) {
-            $params['limit'] = 'limit=' . $limit;
-        }
-
-        if ($skip != null) {
-            $params['skip'] = 'skip=' . $skip;
-        }
-
-        $params['reduce'] = 'reduce=' . (($reduce) ? 'true' : 'false');
-        $params['group'] =  'group='  . (($group) ? 'true' : 'false');
-        $paramString = '?' . implode('&', $params);
-
-        $url = sprintf('%s/_design/%s/_view/%s%s', $this->database->getName(), $this->name, $name, $paramString);
-
-        /** @var ResponseInterface $response */
-        $response = $this->client->get($url);
-
-        return $response->getBody()->getContents();
-    }
-
-    /**
-     * @param $name string the name of the view
-     * @param null $startKeys start filtering keys
-     * @param null $endKeys end filtering keys
-     * @param null|int $limit the max limit of the results
-     * @param null|int $skip skip $x results
-     * @param bool $reduce
-     * @param bool $group
-     * @return string
-     * @internal param array|int|null|string $key the keys
-     */
-    public function rangeView($name, $startKeys = null, $endKeys = null, $limit = null, $skip = null, $reduce = false, $group = false)
-    {
-        $params = [];
-
-        if ($startKeys != null) {
-            $params['startKeys'] = 'startKeys=' . json_encode($startKeys);
-        }
-
-        if ($endKeys != null) {
-            $params['endKeys'] = 'endKeys=' . json_encode($endKeys);
-        }
-
-        if ($limit != null) {
-            $params['limit'] = 'limit=' . $limit;
-        }
-
-        if ($skip != null) {
-            $params['skip'] = 'skip=' . $skip;
-        }
-
-        $params['reduce'] = 'reduce=' . (($reduce) ? 'true' : 'false');
-        $params['group'] =  'group='  . (($group) ? 'true' : 'false');
-        $paramString = '?' . implode('&', $params);
-
-        $url = sprintf('%s/_design/%s/_view/%s%s', $this->database->getName(), $this->name, $name, $paramString);
-
-        /** @var ResponseInterface $response */
-        $response = $this->client->get($url);
-
-        return $response->getBody()->getContents();
-    }
 }
