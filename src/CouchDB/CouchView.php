@@ -57,8 +57,8 @@ class CouchView
     }
 
     public function range($startKeys = null, $endKeys = null) {
-        $params['startKeys'] = 'startKeys=' . json_encode($startKeys);
-        $params['endKeys'] = 'endKeys=' . json_encode($endKeys);
+        $this->params['startkey'] = json_encode($startKeys);
+        $this->params['endkey'] = json_encode($endKeys);
         return $this;
     }
 
