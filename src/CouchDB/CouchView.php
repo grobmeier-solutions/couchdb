@@ -68,7 +68,7 @@ class CouchView
 
     public function get() {
         /** @var ResponseInterface $response */
-        $response = $this->client->get($this->url);
+        $response = $this->client->get($this->url());
         return $response->getBody()->getContents();
     }
 }
