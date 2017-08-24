@@ -81,6 +81,32 @@ class CouchDatabase
         return $response->getBody()->getContents();
     }
 
+    public function bulkCreate($objects)
+    {
+        $hash = new ObjectHasher();
+
+        foreach ($objects as $object) {
+            if (property_exists($object, '_id')) {
+                unset($object->_id);
+            }
+        
+            if (property_exists($object, '_rev')) {
+                unset($object->_rev);
+            }
+            $object->r_hash = $hash->createHash($object);
+        }
+
+        $bulk = new \stdClass();
+        $bulk->docs = $objects;
+
+        $response = $this->client->request('POST', '/' . $this->name . '/_bulk_docs', [
+            'content-type' => 'application/json',
+            'body' => json_encode($bulk)
+        ]);
+
+        return $response->getBody()->getContents();
+    }
+
     public function update(CouchObject $object)
     {
         $response = $this->client->request('PUT', '/' . $this->name . '/' .$object->_id, [
