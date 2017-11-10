@@ -56,6 +56,11 @@ class CouchView
         return $this;
     }
 
+    public function stale($value = "ok") {
+        $this->params['stale'] = $value;
+        return $this;
+    }
+
     public function group($group = true) {
         $this->params['group'] = ($group) ? 'true' : 'false';
         return $this;
