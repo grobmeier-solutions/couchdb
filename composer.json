@@ -19,12 +19,12 @@
     },
     "autoload": {
         "psr-4": {
-            "GrobmeierSolutions\\CouchDB\\": "src/"
+            "GrobmeierSolutions\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "GrobmeierSolutions\\CouchDB\\": "tests/"
+            "GrobmeierSolutions\\": "tests/"
         }
     }
 }
