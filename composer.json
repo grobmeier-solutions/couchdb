@@ -2,7 +2,7 @@
     "name": "grobmeier-solutions/couchdb",
     "description": "Simple CouchDB client without dependencies",
     "type": "library",
-    "license": "Apache License 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "Christian Grobmeier",
